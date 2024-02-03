@@ -38,7 +38,7 @@ const SortPage = () => {
 
   useEffect(() => {
     randomizeInput();
-    const socket = new WebSocket("ws://10.0.1.16:8080/ws");
+    const socket = new WebSocket("ws://localhost:8080/ws");
 
     socket.onopen = () => {
       console.log("connected");
