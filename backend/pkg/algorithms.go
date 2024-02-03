@@ -149,7 +149,7 @@ func radixSortWithProgress(conn *websocket.Conn, data []int, getStepDelay func()
 	}
 }
 
-func bongoSortWithProgress(conn *websocket.Conn, data []int, getStepDelay func() time.Duration) {
+func bogoSortWithProgress(conn *websocket.Conn, data []int, getStepDelay func() time.Duration) {
 	for !isSorted(conn, data, getStepDelay) {
 		shuffle(data)
 	}

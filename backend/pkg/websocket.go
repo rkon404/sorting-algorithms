@@ -97,8 +97,8 @@ func ServeWs(handler *Handler, w http.ResponseWriter, r *http.Request) {
 				if sortMsg.Algorithm == "radix" {
 					radixSortWithProgress(conn, sortMsg.Data, handler.GetStepDelay)
 				}
-				if sortMsg.Algorithm == "bongo" {
-					bongoSortWithProgress(conn, sortMsg.Data, handler.GetStepDelay)
+				if sortMsg.Algorithm == "bogo" {
+					bogoSortWithProgress(conn, sortMsg.Data, handler.GetStepDelay)
 				}
 			}()
 		case "stepDelay":

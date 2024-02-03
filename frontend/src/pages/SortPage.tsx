@@ -148,7 +148,7 @@ const SortPage = () => {
           <MenuItem value="quick">Quick</MenuItem>
           <MenuItem value="heap">Heap</MenuItem>
           <MenuItem value="radix">Radix</MenuItem>
-          <MenuItem value="bongo">Bongo</MenuItem>
+          <MenuItem value="bogo">Bogo</MenuItem>
         </Select>
         <Button sx={{ marginLeft: 5 }} variant="contained" onClick={sortArray}>
           Sort
