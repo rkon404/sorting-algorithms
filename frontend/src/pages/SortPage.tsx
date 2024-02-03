@@ -19,8 +19,8 @@ export interface SortData {
 const SortPage = () => {
   const [ws, setWs] = useState<WebSocket>();
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>("bubble");
-  const [randomCount, setRandomCount] = useState<number>(20);
-  const [stepDelay, setStepDelay] = useState<number>(100);
+  const [randomCount, setRandomCount] = useState<number>(100);
+  const [stepDelay, setStepDelay] = useState<number>(50);
   const [sortData, setSortData] = useState<SortData>({
     data: [],
     lastConsidered: null,
@@ -59,13 +59,23 @@ const SortPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    randomizeInput();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [randomCount]);
+
   const randomizeInput = () => {
-    const randomArray = Array.from(
+    const orderedArray = Array.from(
       { length: randomCount },
-      () => Math.floor(Math.random() * randomCount) + 1
+      (_, index) => index + 1
     );
+    for (let i = orderedArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [orderedArray[i], orderedArray[j]] = [orderedArray[j], orderedArray[i]];
+    }
+
     setSortData({
-      data: randomArray,
+      data: orderedArray,
       lastConsidered: null,
     });
   };
@@ -136,20 +146,16 @@ const SortPage = () => {
           <MenuItem value="bubble">Bubble</MenuItem>
           <MenuItem value="merge">Merge</MenuItem>
           <MenuItem value="quick">Quick</MenuItem>
+          <MenuItem value="heap">Heap</MenuItem>
+          <MenuItem value="radix">Radix</MenuItem>
+          <MenuItem value="bongo">Bongo</MenuItem>
         </Select>
-        {/* <TextField
-          sx={{ marginLeft: 5, backgroundColor: "#fff" }}
-          variant="outlined"
-          placeholder="1,2,3,4,5"
-          value={dataInput}
-          onChange={(e) => setDataInput(e.target.value)}
-        /> */}
         <Button sx={{ marginLeft: 5 }} variant="contained" onClick={sortArray}>
           Sort
         </Button>
         <Button
           sx={{ marginLeft: 2 }}
-          variant="contained"
+          variant="outlined"
           onClick={randomizeInput}
         >
           randomize
@@ -157,9 +163,15 @@ const SortPage = () => {
         <TextField
           sx={{ marginLeft: 5, backgroundColor: "#fff" }}
           variant="outlined"
-          placeholder="20"
+          type="number"
+          InputProps={{ inputProps: { min: 5, max: 10000 } }}
           value={randomCount}
-          onChange={(e) => setRandomCount(parseInt(e.target.value) || 0)}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            if (value >= 5 && value <= 10000) {
+              setRandomCount(value);
+            }
+          }}
         />
       </Box>
       <SortVisualization sortData={sortData} />
