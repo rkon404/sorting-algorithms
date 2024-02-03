@@ -38,7 +38,7 @@ const SortPage = () => {
 
   useEffect(() => {
     randomizeInput();
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const socket = new WebSocket("ws://10.0.1.16:8080/ws");
 
     socket.onopen = () => {
       console.log("connected");
@@ -134,7 +134,7 @@ const SortPage = () => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h4">Sort</Typography>
+        <Typography variant="h5">Sort</Typography>
         <Select
           sx={{
             backgroundColor: "#fff",
@@ -178,8 +178,9 @@ const SortPage = () => {
         sx={{ width: 400, marginTop: 2 }}
         value={stepDelay}
         onChange={(_, value) => updateStepDelay(value as number)}
-        min={1}
-        max={250}
+        min={0}
+        step={0.1}
+        max={100}
         valueLabelDisplay="auto"
         valueLabelFormat={(value) => `${value}`}
       />

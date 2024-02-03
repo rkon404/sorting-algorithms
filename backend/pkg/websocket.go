@@ -19,7 +19,7 @@ type Handler struct {
 	mu        sync.Mutex
 }
 
-func (h *Handler) SetStepDelay(delay int) {
+func (h *Handler) SetStepDelay(delay float32) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	h.StepDelay = time.Duration(delay) * time.Millisecond
@@ -43,14 +43,14 @@ type SortMessage struct {
 }
 
 type ConfirmationMessage struct {
-	Type    string `json:"type"`
-	Success bool   `json:"success"`
-	Delay   int    `json:"delay"`
+	Type    string  `json:"type"`
+	Success bool    `json:"success"`
+	Delay   float32 `json:"delay"`
 }
 
 type StepDelayMessage struct {
-	Type string `json:"type"`
-	Data int    `json:"data"`
+	Type string  `json:"type"`
+	Data float32 `json:"data"`
 }
 
 func (h *Handler) bubbleSortWithProgress(conn *websocket.Conn, data []int) {
@@ -58,7 +58,6 @@ func (h *Handler) bubbleSortWithProgress(conn *websocket.Conn, data []int) {
 	for i := 0; i < n-1; i++ {
 		for j := 0; j < n-i-1; j++ {
 			if data[j] > data[j+1] {
-				startTime := time.Now()
 
 				data[j], data[j+1] = data[j+1], data[j]
 
@@ -69,12 +68,13 @@ func (h *Handler) bubbleSortWithProgress(conn *websocket.Conn, data []int) {
 				}
 
 				msg, _ := json.Marshal(update)
-
 				conn.WriteMessage(websocket.TextMessage, msg)
 
-				time.Sleep(h.GetStepDelay())
-
-				log.Printf("Update sent in %v\n", time.Since(startTime))
+				startTime := time.Now()
+				targetDuration := h.GetStepDelay()
+				for time.Since(startTime) < targetDuration {
+					// do nothing
+				}
 			}
 		}
 	}
@@ -117,7 +117,11 @@ func (h *Handler) sendUpdate(conn *websocket.Conn, data []int, lastConsidered in
 
 	msg, _ := json.Marshal(update)
 	conn.WriteMessage(websocket.TextMessage, msg)
-	time.Sleep(h.GetStepDelay())
+	startTime := time.Now()
+	targetDuration := h.GetStepDelay()
+	for time.Since(startTime) < targetDuration {
+		// do nothing
+	}
 }
 
 func (h *Handler) mergeSortWithProgress(conn *websocket.Conn, data []int, start, end int) {
@@ -172,7 +176,11 @@ func (h *Handler) sendMergeUpdate(conn *websocket.Conn, data []int, lastConsider
 	}
 	msg, _ := json.Marshal(update)
 	conn.WriteMessage(websocket.TextMessage, msg)
-	time.Sleep(h.GetStepDelay())
+	startTime := time.Now()
+	targetDuration := h.GetStepDelay()
+	for time.Since(startTime) < targetDuration {
+		// do nothing
+	}
 }
 
 func ServeWs(handler *Handler, w http.ResponseWriter, r *http.Request) {
