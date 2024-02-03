@@ -1,4 +1,4 @@
-Just a simple project to try out a websocket in Go
+Just a simple project to try out a websocket in Go and to visualize few sorting algorithms
 
 Go handles the calculations and sends updates through a websocket
 
