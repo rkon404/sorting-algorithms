@@ -19,22 +19,6 @@ type Handler struct {
 	mu        sync.Mutex
 }
 
-func (h *Handler) SetStepDelay(delay float32) {
-	h.mu.Lock()
-	defer h.mu.Unlock()
-	h.StepDelay = time.Duration(delay) * time.Millisecond
-}
-
-func (h *Handler) GetStepDelay() time.Duration {
-	h.mu.Lock()
-	defer h.mu.Unlock()
-	return h.StepDelay
-}
-
-func NewHandler() *Handler {
-	return &Handler{StepDelay: 100 * time.Millisecond}
-}
-
 type SortMessage struct {
 	Type           string `json:"type"`
 	Algorithm      string `json:"algorithm"`
@@ -51,6 +35,22 @@ type ConfirmationMessage struct {
 type StepDelayMessage struct {
 	Type string  `json:"type"`
 	Data float32 `json:"data"`
+}
+
+func (h *Handler) SetStepDelay(delay float32) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	h.StepDelay = time.Duration(delay) * time.Millisecond
+}
+
+func (h *Handler) GetStepDelay() time.Duration {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	return h.StepDelay
+}
+
+func NewHandler() *Handler {
+	return &Handler{StepDelay: 100 * time.Millisecond}
 }
 
 func (h *Handler) bubbleSortWithProgress(conn *websocket.Conn, data []int) {

@@ -19,22 +19,12 @@ export interface SortData {
 const SortPage = () => {
   const [ws, setWs] = useState<WebSocket>();
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string>("bubble");
-  const [dataInput, setDataInput] = useState<string>("");
   const [randomCount, setRandomCount] = useState<number>(20);
   const [stepDelay, setStepDelay] = useState<number>(100);
   const [sortData, setSortData] = useState<SortData>({
     data: [],
     lastConsidered: null,
   });
-
-  useEffect(() => {
-    if (dataInput) {
-      setSortData({
-        data: dataInput.split(",").map((item) => parseInt(item)),
-        lastConsidered: null,
-      });
-    }
-  }, [dataInput]);
 
   useEffect(() => {
     randomizeInput();
@@ -78,7 +68,6 @@ const SortPage = () => {
       data: randomArray,
       lastConsidered: null,
     });
-    setDataInput(randomArray.join(","));
   };
 
   const sendStepDelayUpdate = useCallback(
